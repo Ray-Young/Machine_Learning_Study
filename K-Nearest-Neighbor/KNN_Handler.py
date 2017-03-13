@@ -13,18 +13,8 @@ def read_file(file):
     return np.asarray(X)
 
 def group_training_data(X):
-    y = []
-    group_size = int(len(X) / 4)
-    for i in range(0, 4):
-        if (i == group_size - 1):
-            while (len(y) != len(X)):
-                y.append(group_size - 1)
-        else:
-            for j in range(0, group_size):
-                if (len(y) == len(X)):
-                    break
-                else:
-                    y.append(i)
+    y = X[:, [4]]
+    y = np.reshape(y, -1)
     return np.asarray(y)
 
 def handler(X, y, source, k, file2):
@@ -40,7 +30,8 @@ metric='minkowski')
     for i in source:
         item = np.asarray(i).reshape(1, -1)
         result = []
-        result.append(nearest_neigh.kneighbors(item, return_distance=False)[0][0])
+        result.append(nearest_neigh.kneighbors(item,
+return_distance=False)[0][0] + 1)
         result = np.append(result, item)
         result = np.append(result, neigh.predict(item)[0])
         datawriter.writerow(result)
